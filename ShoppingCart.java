@@ -3,7 +3,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class ShoppingCart {
-    private User user; // ✅ Menyimpan user sebagai pemilik cart
+    private User user;
     private List<CartItem> items;
 
     // Constructor: ShoppingCart dimiliki oleh user tertentu
@@ -14,13 +14,44 @@ public class ShoppingCart {
 
     // Tambahkan item ke cart
     public void addItem(Product product, int quantity) {
+        // Cek stok dulu
+        if (product.getStock() < quantity) {
+            System.out.println("Stok tidak mencukupi!");
+            return;
+        }
+
         for (CartItem item : items) {
             if (item.getProduct().getId().equals(product.getId())) {
+                // Update quantity di cart
                 item.setQuantity(item.getQuantity() + quantity);
-                return; // update quantity, tidak perlu tambah baru
+                // Kurangi stok produk setelah berhasil tambah
+                product.reduceStock(quantity);
+                return;
             }
         }
+        // Kalau belum ada, tambahkan item baru
         items.add(new CartItem(product, quantity));
+        product.reduceStock(quantity);
+
+        System.out.println("Produk berhasil dimasukkan ke keranjang. ");
+    }
+
+    public void reduceItemQuantity(String productId, int quantity) {
+        Iterator<CartItem> iterator = items.iterator();
+        while (iterator.hasNext()) {
+            CartItem item = iterator.next();
+            if (item.getProduct().getId().equals(productId)) {
+                int currentQty = item.getQuantity();
+                if (quantity >= currentQty) {
+                    // Kalau dikurangi sama atau lebih dari quantity sekarang, hapus item
+                    iterator.remove();
+                } else {
+                    // Kurangi quantity saja
+                    item.setQuantity(currentQty - quantity);
+                }
+                break;
+            }
+        }
     }
 
     // Hapus item berdasarkan ID produk

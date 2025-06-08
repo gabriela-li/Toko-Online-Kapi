@@ -1,39 +1,39 @@
-import java.util.ArrayList;
-import java.util.List;
-
 public class User {
-    List<List<String>> user = new ArrayList<>();
     private String username;
     private String password;
     private String fullName;
     private String userType;
-
-    /*
-     * username = andi23
-     * passw = passw123
-     * fullName = Andi Pratama
-     * type = customer
-     */
+    private ShoppingCart cart;
 
     public User(String username, String password, String fullName, String userType) {
         this.username = username;
         this.password = password;
         this.fullName = fullName;
         this.userType = userType;
-        user.add(List.of("Titi", "20242025", "Titi Sendi", "Customer"));
-        user.add(List.of("Didi", "123456", "Didi Dodo", "Admin"));
-        user.add(List.of(username, password, fullName, userType));
+        this.cart = new ShoppingCart(this); // setiap user punya 1 keranjang
+    }
+
+    public ShoppingCart getCart() {
+        return this.cart;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public String getFullName() {
+        return fullName;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public String getUserType (){
-        return this.userType;
+    public String getPassword() {
+        return password;
     }
 
-    public String getFullName(){
-        return this.fullName;
+    public boolean checkPassword(String inputPassword) {
+        return password.equals(inputPassword);
     }
 }
