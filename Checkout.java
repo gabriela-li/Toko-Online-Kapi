@@ -28,12 +28,16 @@ public class Checkout {
                 .setStatus("Pending")
                 .build();
         this.lastOrder = order;
-        
+
+        TransactionManager.getInstance().addTransaction(order, user, paymentMethod);
+
         boolean paymentSuccess = paymentContext.pay(order.getTotalPrice(), isExpressShipping);
         if (paymentSuccess) {
             updateOrderStatus(order.getOrderId(), "Paid");
+            TransactionManager.getInstance().updateTransactionStatus(order.getOrderId(), "Paid");
         } else {
             updateOrderStatus(order.getOrderId(), "Failed");
+            TransactionManager.getInstance().updateTransactionStatus(order.getOrderId(), "Failed");
         }
 
         order.sendNotificationToCustomer();
