@@ -1,5 +1,4 @@
 import java.util.*;
-
 public class Main {
     public static final Map<String, String> registeredCC = new HashMap<>();
     static {
@@ -169,7 +168,7 @@ public class Main {
 
                     if (items.isEmpty()) {
                         System.out.println("Keranjang Anda kosong.");
-                        return;
+                        break;
                     }
 
                     // Tampilkan isi keranjang dengan nomor urut
@@ -182,6 +181,8 @@ public class Main {
 
                     // List untuk menyimpan item yang akan dibayar
                     ShoppingCart checkoutCart = new ShoppingCart(user);
+
+                    boolean hasValidItem = false; // Flag untuk cek apakah ada item valid
 
                     // Loop untuk input pilihan item dan jumlah checkout
                     System.out.print("Pilih item yang ingin Anda checkout (pisahkan dengan koma): ");
@@ -209,6 +210,7 @@ public class Main {
 
                                     // Kurangi quantity di keranjang asli
                                     keranjang.reduceItemQuantity(selectedItem.getProduct().getId(), checkoutQty);
+                                    hasValidItem = true;
                                 } else {
                                     System.out.println("Jumlah checkout tidak valid.");
                                 }
@@ -220,9 +222,9 @@ public class Main {
                         }
                     }
                     // --- Pilih metode pembayaran ---
-                    if (checkoutCart.getItems().isEmpty()) {
+                    if (!hasValidItem || checkoutCart.getItems().isEmpty()) {
                         System.out.println("Tidak ada item untuk dibayar.");
-                        return;
+                        break;
                     }
 
                     System.out.print("Pilih Jenis Pembayaran (cc / gopay / transfer): ");
@@ -236,7 +238,6 @@ public class Main {
                                 paymentContext.setPaymentStrategy(new CreditCard(registeredCC.get(user.getUsername())));
                             } else {
                                 System.out.println("Credit Card Anda tidak terdaftar.");
-                                return;
                             }
                         }
                         case "gopay" -> {
@@ -250,7 +251,6 @@ public class Main {
                         }
                         default -> {
                             System.out.println("Metode pembayaran tidak valid.");
-                            return;
                         }
                     }
 
