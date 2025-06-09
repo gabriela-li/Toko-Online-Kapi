@@ -12,9 +12,8 @@ public class ShoppingCart {
         this.items = new ArrayList<>();
     }
 
-    // Tambahkan item ke cart
+    // Method untuk add item ke cart
     public void addItem(Product product, int quantity) {
-        // Cek stok dulu
         if (product.getStock() < quantity) {
             System.out.println("Stok tidak mencukupi!");
             return;
@@ -22,18 +21,14 @@ public class ShoppingCart {
 
         for (CartItem item : items) {
             if (item.getProduct().getId().equals(product.getId())) {
-                // Update quantity di cart
                 item.setQuantity(item.getQuantity() + quantity);
-                // Kurangi stok produk setelah berhasil tambah
                 product.reduceStock(quantity);
                 return;
             }
         }
-        // Kalau belum ada, tambahkan item baru
         items.add(new CartItem(product, quantity));
         product.reduceStock(quantity);
-
-        System.out.println("Produk berhasil dimasukkan ke keranjang. ");
+        System.out.println("Produk berhasil dimasukkan ke keranjang.");
     }
 
     public void reduceItemQuantity(String productId, int quantity) {
@@ -52,6 +47,17 @@ public class ShoppingCart {
                 break;
             }
         }
+    }
+
+    // Method khusus untuk checkout
+    public void addItemForCheckout(Product product, int quantity) {
+        for (CartItem item : items) {
+            if (item.getProduct().getId().equals(product.getId())) {
+                item.setQuantity(item.getQuantity() + quantity);
+                return;
+            }
+        }
+        items.add(new CartItem(product, quantity));
     }
 
     // Hapus item berdasarkan ID produk

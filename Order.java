@@ -42,6 +42,18 @@ public class Order {
         return baseTotal;
     }
 
+    public LocalDateTime getOrderDate(){
+        return orderDate;
+    }
+
+    public String getDeliveryAddress(){
+        return deliveryAddress;
+    }
+
+    public ShoppingCart getCart(){
+        return cart;
+    }
+
     public String getOrderId() {
         return orderId;
     }

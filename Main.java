@@ -1,7 +1,6 @@
 import java.util.*;
 
 public class Main {
-
     public static final Map<String, String> registeredCC = new HashMap<>();
     static {
         registeredCC.put("titi12", "9944-2211");
@@ -105,25 +104,45 @@ public class Main {
                     }
                 }
                 case 2 -> {
-                    System.out.println("\nLihat Katalog Produk:");
-                    List<Product> all = ProductDatabase.getAllProducts();
-                    if (all.isEmpty()) {
-                        System.out.println("Katalog kosong.");
-                        break;
+                    System.out.println("\nPilih kategori produk:");
+                    System.out.println("1. Semua Produk");
+                    System.out.println("2. Clothing");
+                    System.out.println("3. Cosmetic");
+                    System.out.println("4. Food");
+                    System.out.print("Masukkan pilihan: ");
+                    int kategori = sc.nextInt();
+                    sc.nextLine();
+
+                    List<Product> semuaProduk = ProductDatabase.getAllProducts();
+                    List<Product> filtered = new ArrayList<>();
+
+                    for (Product p : semuaProduk) {
+                        switch (kategori) {
+                            case 1 -> filtered = semuaProduk;
+                            case 2 -> { if (p instanceof Clothing) filtered.add(p); }
+                            case 3 -> { if (p instanceof Cosmetic) filtered.add(p); }
+                            case 4 -> { if (p instanceof Food) filtered.add(p); }
+                            default -> {
+                                System.out.println("Pilihan tidak valid.");
+                                return;
+                            }
+                        }
+                        if (kategori == 1) break;
                     }
 
-                    for (int i = 0; i < all.size(); i++) {
-                        System.out.printf("%d. %s | %s | Rp%.0f | Stok: %d\n",
-                                i + 1, all.get(i).getName(), all.get(i).getCategory(),
-                                all.get(i).getPrice(), all.get(i).getStock());
+                    if (filtered.isEmpty()) {
+                        System.out.println("Katalog kosong.");
+                        return;
                     }
+
+                    tampilkanProduk(filtered, user);
 
                     System.out.print("Pilih nomor produk untuk lihat detail atau tekan 0 untuk kembali: ");
                     int pilihan = sc.nextInt();
                     sc.nextLine();
 
-                    if (pilihan >= 1 && pilihan <= all.size()) {
-                        Product selected = all.get(pilihan - 1);
+                    if (pilihan >= 1 && pilihan <= filtered.size()) {
+                        Product selected = filtered.get(pilihan - 1);
                         System.out.println("\n" + selected.getDetails());
                         System.out.println("Harga: " + Main.formatRupiah(selected.getPrice()));
                         System.out.println("Stok tersedia: " + selected.getStock());
@@ -138,9 +157,7 @@ public class Main {
 
                             keranjang.addItem(selected, jumlah);
                         }
-                    } else if (pilihan == 0){
-
-                    }else {
+                    } else if (pilihan != 0) {
                         System.out.println("Pilihan tidak valid.");
                     }
                 }
@@ -188,7 +205,7 @@ public class Main {
                                             checkoutQty, selectedItem.getProduct().getName(), totalHarga);
 
                                     // Tambahkan ke keranjang checkout (yang akan dibayar)
-                                    checkoutCart.addItem(selectedItem.getProduct(), checkoutQty);
+                                    checkoutCart.addItemForCheckout(selectedItem.getProduct(), checkoutQty);
 
                                     // Kurangi quantity di keranjang asli
                                     keranjang.reduceItemQuantity(selectedItem.getProduct().getId(), checkoutQty);
@@ -252,6 +269,7 @@ public class Main {
                     if (logOut.equalsIgnoreCase("yes")) {
                         isLoggedOut = true;
                     }
+                    System.out.println();
                 }
                 default -> System.out.println("Pilihan tidak valid.");
             }
@@ -274,19 +292,42 @@ public class Main {
 
             switch (menu) {
                 case 1 -> {
-                    List<Product> products = ProductDatabase.getAllProducts();
-                    if (products.isEmpty()) {
-                        System.out.println("Belum ada produk dalam katalog.");
-                    } else {
-                        System.out.println("Daftar Produk:");
-                        for (Product p : products) {
-                            System.out.println(p.getDetails() +
-                                    " | Harga: " + formatRupiah(p.getPrice()) +
-                                    " | Stok: " + p.getStock());
+                    System.out.println("\nPilih kategori produk:");
+                    System.out.println("1. Semua Produk");
+                    System.out.println("2. Clothing");
+                    System.out.println("3. Cosmetic");
+                    System.out.println("4. Food");
+                    System.out.print("Masukkan pilihan: ");
+                    int kategori = sc.nextInt();
+                    sc.nextLine();
+
+                    List<Product> semuaProduk = ProductDatabase.getAllProducts();
+                    List<Product> filtered = new ArrayList<>();
+
+                    for (Product p : semuaProduk) {
+                        switch (kategori) {
+                            case 1 -> filtered = semuaProduk;
+                            case 2 -> { if (p instanceof Clothing) filtered.add(p); }
+                            case 3 -> { if (p instanceof Cosmetic) filtered.add(p); }
+                            case 4 -> { if (p instanceof Food) filtered.add(p); }
+                            default -> {
+                                System.out.println("Pilihan tidak valid.");
+                                return;
+                            }
                         }
+                        if (kategori == 1) break; // supaya tidak looping kalau pilih semua
                     }
+                    tampilkanProduk(filtered, user);
                 }
                 case 2 -> {
+                    System.out.println("\nPilih jenis produk:");
+                    System.out.println("1. Clothing");
+                    System.out.println("2. Cosmetic");
+                    System.out.println("3. Food");
+                    System.out.print("Masukkan pilihan (1-3): ");
+                    int jenis = sc.nextInt();
+                    sc.nextLine();
+
                     System.out.print("Masukkan ID produk: ");
                     String id = sc.nextLine();
                     System.out.print("Masukkan nama produk: ");
@@ -297,14 +338,40 @@ public class Main {
                     System.out.print("Masukkan stok produk: ");
                     int stock = sc.nextInt();
                     sc.nextLine();
-                    System.out.print("Masukkan ukuran (Size): ");
-                    String size = sc.nextLine();
-                    System.out.print("Masukkan bahan (Material): ");
-                    String material = sc.nextLine();
 
-                    Product newProduct = new Clothing(id, name, price, stock, size, material);
-                    ProductDatabase.addProduct(newProduct);
-                    System.out.println("Produk berhasil ditambahkan!");
+                    Product newProduct = null;
+
+                    switch (jenis) {
+                        case 1 -> { // Clothing
+                            System.out.print("Masukkan ukuran (Size): ");
+                            String size = sc.nextLine();
+                            System.out.print("Masukkan bahan (Material): ");
+                            String material = sc.nextLine();
+                            newProduct = new Clothing(id, name, price, stock, size, material);
+                        }
+                        case 2 -> { // Cosmetic
+                            System.out.print("Masukkan brand: ");
+                            String brand = sc.nextLine();
+                            System.out.print("Masukkan ingredient: ");
+                            String ingredient = sc.nextLine();
+                            newProduct = new Cosmetic(id, name, price, stock, brand, ingredient);
+                        }
+                        case 3 -> { // Food
+                            System.out.print("Masukkan tanggal kadaluarsa (YYYY-MM-DD): ");
+                            String expiryDate = sc.nextLine();
+                            System.out.print("Masukkan berat/ukuran (contoh: 50g): ");
+                            String size = sc.nextLine();
+                            newProduct = new Food(id, name, price, stock, expiryDate, size);
+                        }
+                        default -> {
+                            System.out.println("Pilihan tidak valid.");
+                        }
+                    }
+
+                    if (newProduct != null) {
+                        ProductDatabase.addProduct(newProduct);
+                        System.out.println("Produk berhasil ditambahkan!");
+                    }
                 }
                 case 3 -> {
                     List<Product> all = ProductDatabase.getAllProducts();
@@ -324,16 +391,34 @@ public class Main {
                     } else {
                         System.out.println("Pilihan tidak valid.");
                     }
-                }
-                case 4 -> {
-                    List<Order> allOrders = OrderDatabase.getAllOrders();
-                    if (allOrders.isEmpty()) {
-                        System.out.println("Belum ada transaksi.");
-                    } else {
-                        System.out.println("Daftar Transaksi:");
-                        for (Order o : allOrders) {
-                            System.out.println(o.getSummary());
-                            System.out.println("--------------------------");
+                }case 4 -> {
+                    System.out.println("\n=== LAPORAN TRANSAKSI ===");
+                    System.out.println("1. Lihat Semua Transaksi");
+                    System.out.println("2. Lihat Detail Transaksi");
+                    System.out.println("3. Filter by Status");
+                    System.out.println("4. Total Revenue");
+                    System.out.print("Pilih: ");
+
+                    int reportChoice = sc.nextInt();
+                    sc.nextLine();
+
+                    TransactionManager tm = TransactionManager.getInstance();
+
+                    switch (reportChoice) {
+                        case 1 -> tm.displayAllTransactions();
+                        case 2 -> {
+                            System.out.print("Masukkan Transaction ID: ");
+                            String txnId = sc.nextLine();
+                            tm.displayTransactionDetail(txnId);
+                        }
+                        case 3 -> {
+                            System.out.print("Masukkan Status (Pending/Paid/Failed): ");
+                            String status = sc.nextLine();
+                            tm.displayTransactionsByStatus(status);
+                        }
+                        case 4 -> {
+                            double revenue = tm.getTotalRevenue();
+                            System.out.printf("Total Revenue: Rp%.0f\n", revenue);
                         }
                     }
                 }
@@ -343,6 +428,7 @@ public class Main {
                     if (keluar.equalsIgnoreCase("yes")) {
                         isLoggedOut = true;
                     }
+                    System.out.println();
                 }
                 default -> System.out.println("Pilihan tidak valid!");
             }
@@ -366,5 +452,24 @@ public class Main {
         ProductDatabase.addProduct(p1);
         ProductDatabase.addProduct(p2);
         ProductDatabase.addProduct(p3);
+    }
+
+    public static void tampilkanProduk(List<Product> produkList, User user) {
+        if (produkList.isEmpty()) {
+            System.out.println("Tidak ada produk.");
+            return;
+        }
+
+        if(user.getUserType().equals("Admin")){
+            for (int i = 0; i < produkList.size(); i++) {
+                Product p = produkList.get(i);
+                System.out.printf("%s | %d. %s | %s | Rp%.0f | Stok: %d\n", p.getId(), i + 1, p.getName(), p.getCategory(), p.getPrice(), p.getStock());
+            }
+        }else{
+            for (int i = 0; i < produkList.size(); i++) {
+                Product p = produkList.get(i);
+                System.out.printf("%d. %s | %s | Rp%.0f | Stok: %d\n", i + 1, p.getName(), p.getCategory(), p.getPrice(), p.getStock());
+            }
+        }
     }
 }

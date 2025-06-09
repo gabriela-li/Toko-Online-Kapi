@@ -37,11 +37,7 @@ public abstract class Product {
     }
 
     public void reduceStock(int amount) {
-        if (stock >= amount) {
-            stock -= amount;
-        } else {
-            throw new IllegalArgumentException("Stock tidak mencukupi!");
-        }
+        stock -= amount;
     }
 
     public void addStock(int amount) {

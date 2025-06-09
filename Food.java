@@ -13,6 +13,7 @@ public class Food extends Product {
         return String.format("Food: %s, Expiration: %s, Weight: %s", name, expirationDate, weight);
     }
 
+
     public double getTotalPrice(){
         return this.price;
     }

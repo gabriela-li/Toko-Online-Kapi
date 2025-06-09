@@ -1,5 +1,4 @@
 public class Clothing extends Product{
-
     private String size;//sizenya brp
     private String material;//tipe material bajunya apa
 
@@ -14,6 +13,7 @@ public class Clothing extends Product{
     public String getDetails(){
         return String.format("Clothing: %s, Size: %s, Material: %s", name, size, material);
     }
+
 
     public double getTotalPrice(){
         return this.price;
