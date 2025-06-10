@@ -28,16 +28,20 @@ public class Transaction {
     }
 
     // Getters
-    public String getTransactionId() { return transactionId; }
-    public String getOrderId() { return orderId; }
-    public String getCustomerId() { return customerId; }
-    public String getCustomerName() { return customerName; }
-    public double getTotalAmount() { return totalAmount; }
-    public String getPaymentMethod() { return paymentMethod; }
-    public String getStatus() { return status; }
-    public java.time.LocalDateTime getTransactionDate() { return transactionDate; }
-    public String getDeliveryAddress() { return deliveryAddress; }
-    public java.util.List<TransactionItem> getItems() { return items; }
+    public String getTransactionId() {
+        return transactionId; }
+    public String getOrderId() {
+        return orderId; }
+    public String getCustomerId() {
+        return customerId; }
+    public String getCustomerName() {
+        return customerName; }
+    public double getTotalAmount() {
+        return totalAmount; }
+    public String getPaymentMethod() {
+        return paymentMethod; }
+    public String getStatus() {
+        return status; }
 
     // Setters
     public void setStatus(String status) { this.status = status; }

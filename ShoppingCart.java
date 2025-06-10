@@ -60,18 +60,6 @@ public class ShoppingCart {
         items.add(new CartItem(product, quantity));
     }
 
-    // Hapus item berdasarkan ID produk
-    public void removeItem(String productId) {
-        Iterator<CartItem> iterator = items.iterator();
-        while (iterator.hasNext()) {
-            CartItem item = iterator.next();
-            if (item.getProduct().getId().equals(productId)) {
-                iterator.remove();
-                break;
-            }
-        }
-    }
-
     public List<CartItem> getItems() {
         return items;
     }
@@ -82,22 +70,5 @@ public class ShoppingCart {
             total += item.getTotalPrice();
         }
         return total;
-    }
-
-    public void clear() {
-        items.clear();
-    }
-
-    public boolean isEmpty() {
-        return items.isEmpty();
-    }
-
-    //Getter untuk mendapatkan user
-    public String getUserName() {
-        return user.getFullName() ;
-    }
-
-    public String getOwnerInfo() {
-        return user.getFullName() + " (" + user.getUsername() + ")";
     }
 }

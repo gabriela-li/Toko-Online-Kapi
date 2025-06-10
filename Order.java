@@ -1,45 +1,59 @@
 import java.time.LocalDateTime;
-
 public class Order {
     private String orderId;
     private User user;
     private ShoppingCart cart;
     private double totalPrice;
+    private double taxAmount;
     private boolean giftWrap;
     private boolean expressShipping;
     private String paymentMethod;
     private String deliveryAddress;
     private LocalDateTime orderDate;
     private String status;
+    private Config config;
 
-    public Order(String orderId, User user, ShoppingCart cart, double totalPrice, boolean giftWrap, boolean expressShipping,
-                 String paymentMethod, String deliveryAddress, LocalDateTime orderDate, String status) {
+    public Order(String orderId, User user, ShoppingCart cart, double totalPrice, double taxAmount, boolean giftWrap, boolean expressShipping,
+                 String paymentMethod, String deliveryAddress, LocalDateTime orderDate, String status, Config config) {
         this.orderId = orderId;
         this.user = user;
         this.cart = cart;
         this.totalPrice = totalPrice;
+        this.taxAmount = taxAmount;
         this.giftWrap = giftWrap;
         this.expressShipping = expressShipping;
         this.paymentMethod = paymentMethod;
         this.deliveryAddress = deliveryAddress;
         this.orderDate = orderDate;
         this.status = status;
+        this.config = config;
+    }
+
+    public User getUser(){
+        return user;
+    }
+
+    // Tambahkan getter untuk taxAmount
+    public double getTaxAmount() {
+        return taxAmount;
     }
 
     public double getTotalPrice() {
         double baseTotal = cart.getTotalPrice();
 
-        // Misal tambahkan biaya gift wrap Rp10.000 jika giftWrap true
+        // Tambahkan biaya gift wrap jika dipilih
         if (giftWrap) {
             baseTotal += 10000;
         }
 
-        // Misal tambahkan biaya express shipping Rp15.000 jika expressShipping true
+        // Tambahkan biaya express shipping jika dipilih
         if (expressShipping) {
             baseTotal += 15000;
         }
 
-        return baseTotal;
+        // Hitung pajak
+        this.taxAmount = baseTotal * config.getTaxRate();
+        return baseTotal + this.taxAmount;
     }
 
     public LocalDateTime getOrderDate(){
@@ -63,7 +77,28 @@ public class Order {
     }
 
     public String getSummary() {
-        return String.format("Order Summary: %s, Total: %.2f", orderId, totalPrice);
+        double subtotal = cart.getTotalPrice();
+        if (giftWrap) subtotal += 10000;
+        if (expressShipping) subtotal += 15000;
+
+        return String.format(
+                "Order Summary:\n" +
+                        "Order ID: %s\n" +
+                        "Subtotal: Rp%,.2f\n" +
+                        "Gift Wrap: %s (+Rp10,000)\n" +
+                        "Express Shipping: %s (+Rp15,000)\n" +
+                        "Tax (%.0f%%): Rp%,.2f\n" +
+                        "Total: Rp%,.2f\n" +
+                        "Alamat Pengiriman: %s",
+                orderId,
+                subtotal,
+                giftWrap ? "Ya" : "Tidak",
+                expressShipping ? "Ya" : "Tidak",
+                config.getTaxRate() * 100,
+                taxAmount,
+                getTotalPrice(),
+                deliveryAddress
+        );
     }
 
     public void sendNotificationToCustomer() {

@@ -16,8 +16,4 @@ public class CreditCard implements PaymentStrategy {
     public String getPaymentMethodName() {
         return "CreditCard";
     }
-
-    public String getCardNum (){
-        return this.cardNumber;
-    }
 }

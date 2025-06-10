@@ -46,5 +46,4 @@ public abstract class Product {
 
     public abstract String getDetails();
     public abstract double getTotalPrice();
-    
 }

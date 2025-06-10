@@ -119,9 +119,4 @@ public class TransactionManager {
                 .mapToDouble(Transaction::getTotalAmount)
                 .sum();
     }
-
-    // Method untuk mendapatkan semua transaksi
-    public java.util.List<Transaction> getAllTransactions() {
-        return new java.util.ArrayList<>(transactions);
-    }
 }

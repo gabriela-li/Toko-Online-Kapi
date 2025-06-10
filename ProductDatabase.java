@@ -10,19 +10,11 @@ public class ProductDatabase {
         products.put(product.getId(), product);
     }
 
-    public static Product getProductById(String id) {
-        return products.get(id);
-    }
-
     public static List<Product> getAllProducts() {
         return new ArrayList<>(products.values());
     }
 
     public static void removeProduct(String id) {
         products.remove(id);
-    }
-
-    public static boolean exists(String id) {
-        return products.containsKey(id);
     }
 }

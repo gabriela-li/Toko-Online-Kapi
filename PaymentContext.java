@@ -12,11 +12,4 @@ public class PaymentContext {
         }
         return paymentStrategy.processPayment(amount, isExpressShipping);
     }
-
-    public String getPaymentMethodName() {
-        if (paymentStrategy == null) {
-            return "No payment method";
-        }
-        return paymentStrategy.getPaymentMethodName();
-    }
 }

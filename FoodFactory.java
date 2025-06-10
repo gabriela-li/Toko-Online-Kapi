@@ -5,5 +5,4 @@ public class FoodFactory extends ProductFactory{
         String weight = params[1];
         return new Food(id, name, price, stock, expirationDate, weight);
     }
-    
 }

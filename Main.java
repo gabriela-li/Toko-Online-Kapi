@@ -202,8 +202,19 @@ public class Main {
 
                                 if (checkoutQty > 0 && checkoutQty <= selectedItem.getQuantity()) {
                                     double totalHarga = checkoutQty * selectedItem.getProduct().getPrice();
-                                    System.out.printf("Checkout %d x %s berhasil, total bayar: Rp%.0f\n",
-                                            checkoutQty, selectedItem.getProduct().getName(), totalHarga);
+                                    double taxAmount = totalHarga * config.getTaxRate();
+                                    double totalHargaSetelahPajak = totalHarga + taxAmount;
+
+                                    System.out.printf("Checkout %d x %s berhasil\n" +
+                                                    "Harga: Rp%,.0f\n" +
+                                                    "Pajak (%.0f%%): Rp%,.0f\n" +
+                                                    "Total bayar: Rp%,.0f\n",
+                                            checkoutQty,
+                                            selectedItem.getProduct().getName(),
+                                            totalHarga,
+                                            config.getTaxRate() * 100,
+                                            taxAmount,
+                                            totalHargaSetelahPajak);
 
                                     // Tambahkan ke keranjang checkout (yang akan dibayar)
                                     checkoutCart.addItemForCheckout(selectedItem.getProduct(), checkoutQty);
@@ -254,14 +265,62 @@ public class Main {
                         }
                     }
 
+                    System.out.println("\n=== OPSI PENGIRIMAN ===");
+                    System.out.println("1. Standard Shipping (Gratis)");
+                    System.out.println("2. Express Shipping (+Rp15.000)");
+                    System.out.print("Pilih jenis pengiriman (1/2): ");
+                    int shippingChoice = sc.nextInt();
+                    sc.nextLine();  // consume newline
+                    boolean isExpressShipping = shippingChoice == 2;
+
+                    System.out.println("\n=== OPSI PENGEMASAN ===");
+                    System.out.println("1. Kemasan Biasa (Gratis)");
+                    System.out.println("2. Gift Wrap (+Rp10.000)");
+                    System.out.print("Pilih jenis pengemasan (1/2): ");
+                    int wrapChoice = sc.nextInt();
+                    sc.nextLine();  // consume newline
+                    boolean isGiftWrap = wrapChoice == 2;
+
+                    // Input alamat pengiriman
+                    System.out.print("Masukkan alamat pengiriman: ");
+                    String deliveryAddress = sc.nextLine();
+
                     // Proses checkout / pembayaran
                     OrderSubject orderSubject = new OrderSubject();
                     Checkout checkout = new Checkout(paymentContext, orderSubject, config);
-                    checkout.processCheckout(user, checkoutCart, false, false, paymentMethod, "Jl. Merdeka 10");
+                    checkout.processCheckout(user, checkoutCart, isGiftWrap, isExpressShipping, paymentMethod, deliveryAddress);
 
+                    // Setelah checkout berhasil:
                     Order latestOrder = checkout.getLastOrder();
+
                     System.out.println("\n====== RINGKASAN PESANAN ======");
                     System.out.println(latestOrder.getSummary());
+                    System.out.println("ID Pesanan: " + latestOrder.getOrderId());
+
+                    // Kemudian bisa ditambahkan menu untuk melihat riwayat:
+                    System.out.println("\n1. Lihat Riwayat Pesanan");
+                    System.out.println("2. Kembali ke Menu Utama");
+                    System.out.print("Masukkan pilihan menu: ");
+                    int choice = sc.nextInt();
+                    sc.nextLine();
+
+                    if (choice == 1) {
+                        System.out.println("\n=== RIWAYAT PESANAN ===");
+                        List<Order> userOrders = OrderDatabase.getOrdersByUser(user.getUsername());
+
+                        if (userOrders.isEmpty()) {
+                            System.out.println("Belum ada pesanan.");
+                        } else {
+                            System.out.println("Total pesanan: " + userOrders.size());
+                            for (Order order : userOrders) {
+                                System.out.println("\n--------------------------------");
+                                System.out.println("ID Pesanan: " + order.getOrderId());
+                                System.out.println("Tanggal: " + order.getOrderDate());
+                                System.out.println("Status: " + order.getStatus());
+                                System.out.println(order.getSummary());
+                            }
+                        }
+                    }
                 }
                 case 5 -> {
                     System.out.print("Logout (yes/no): ");
@@ -347,21 +406,33 @@ public class Main {
                             String size = sc.nextLine();
                             System.out.print("Masukkan bahan (Material): ");
                             String material = sc.nextLine();
-                            newProduct = new Clothing(id, name, price, stock, size, material);
+
+                            // Panggil factory-nya
+                            ProductFactory factory = new ClothingFactory();
+                            String[] params = {size, material};
+                            newProduct = factory.createProduct(id, name, price, stock, params);
                         }
                         case 2 -> { // Cosmetic
                             System.out.print("Masukkan brand: ");
                             String brand = sc.nextLine();
                             System.out.print("Masukkan ingredient: ");
                             String ingredient = sc.nextLine();
-                            newProduct = new Cosmetic(id, name, price, stock, brand, ingredient);
+
+                            // Panggil factory-nya
+                            ProductFactory factory = new CosmeticFactory();
+                            String[] params = {brand, ingredient};
+                            newProduct = factory.createProduct(id, name, price, stock, params);
                         }
                         case 3 -> { // Food
                             System.out.print("Masukkan tanggal kadaluarsa (YYYY-MM-DD): ");
                             String expiryDate = sc.nextLine();
                             System.out.print("Masukkan berat/ukuran (contoh: 50g): ");
-                            String size = sc.nextLine();
-                            newProduct = new Food(id, name, price, stock, expiryDate, size);
+                            String weight = sc.nextLine();
+
+                            // Panggil factory-nya
+                            ProductFactory factory = new FoodFactory();
+                            String[] params = {expiryDate, weight};
+                            newProduct = factory.createProduct(id, name, price, stock, params);
                         }
                         default -> {
                             System.out.println("Pilihan tidak valid.");

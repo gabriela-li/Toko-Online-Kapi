@@ -1,19 +1,36 @@
 import java.time.LocalDateTime;
 import java.util.UUID;
-
 public class OrderBuilder {
     private String customerId;
     private ShoppingCart cart;
     private double totalPrice;
+    private double taxAmount;
     private boolean giftWrap;
     private boolean expressShipping;
     private String paymentMethod;
     private String deliveryAddress;
     private LocalDateTime orderDate;
     private String status;
+    private Config config;
+    private User user;
 
     public OrderBuilder setCustomerId(String customerId) {
         this.customerId = customerId;
+        return this;
+    }
+
+    public OrderBuilder setUser(User user){
+        this.user = user;
+        return this;
+    }
+
+    public OrderBuilder setTaxAmount(double taxAmount) {
+        this.taxAmount = taxAmount;
+        return this;
+    }
+
+    public OrderBuilder setConfig(Config config) {
+        this.config = config;
         return this;
     }
 
@@ -58,6 +75,19 @@ public class OrderBuilder {
     }
 
     public Order build() {
-        return new Order(UUID.randomUUID().toString(), new User(customerId, "", "", "regular"), cart, totalPrice, giftWrap, expressShipping, paymentMethod, deliveryAddress, orderDate, status);
+        return new Order(
+                UUID.randomUUID().toString(),
+                user,  // Gunakan user yang diset
+                cart,
+                totalPrice,
+                taxAmount,
+                giftWrap,
+                expressShipping,
+                paymentMethod,
+                deliveryAddress,
+                orderDate,
+                status,
+                config
+        );
     }
 }

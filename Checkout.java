@@ -15,18 +15,37 @@ public class Checkout {
 
     //method untuk proses checkout
     //usernya siapa, keranjang, giftWrap, express shipping kah, payment method nya apa, alamat usernya dimana
-    public void processCheckout(User user, ShoppingCart cart, boolean isGiftWrap, boolean isExpressShipping, String paymentMethod, String address) {
+    public void processCheckout(User user, ShoppingCart cart, boolean isGiftWrap, boolean isExpressShipping,
+                                String paymentMethod, String address) {
+        // Hitung subtotal
+        double subtotal = cart.getTotalPrice();
+
+        // Hitung biaya tambahan
+        if (isGiftWrap) subtotal += 10000;
+        if (isExpressShipping) subtotal += 15000;
+
+        // Hitung pajak
+        double taxAmount = subtotal * config.getTaxRate();
+        double totalPrice = subtotal + taxAmount;
+
         Order order = new OrderBuilder()
+                .setUser(user)
                 .setCustomerId(user.getUsername())
                 .setCart(cart)
-                .setTotalPrice(cart.getTotalPrice())
+                .setTotalPrice(totalPrice)
                 .setGiftWrap(isGiftWrap)
                 .setExpressShipping(isExpressShipping)
                 .setPaymentMethod(paymentMethod)
                 .setDeliveryAddress(address)
                 .setOrderDate(java.time.LocalDateTime.now())
                 .setStatus("Pending")
+                .setTaxAmount(taxAmount)
+                .setConfig(config)
                 .build();
+
+        // simpan order ke database
+        OrderDatabase.addOrder(order);
+
         this.lastOrder = order;
 
         TransactionManager.getInstance().addTransaction(order, user, paymentMethod);
@@ -53,5 +72,15 @@ public class Checkout {
 
     public Order getLastOrder() {
         return lastOrder;
+    }
+
+    // Untuk cek status order nanti:
+    public void checkOrderStatus(String orderId) {
+        Order order = OrderDatabase.getOrderById(orderId);
+        if (order != null) {
+            System.out.println("Status order: " + order.getStatus());
+        } else {
+            System.out.println("Order tidak ditemukan");
+        }
     }
 }

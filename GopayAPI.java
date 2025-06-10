@@ -1,5 +1,4 @@
 public class GopayAPI {
-
     public boolean makePayment(double amount, boolean isExpressShipping) {
         System.out.println("Processing payment via GoPay");
         System.out.println("Amount: Rp " + amount);

@@ -14,9 +14,7 @@ public class Clothing extends Product{
         return String.format("Clothing: %s, Size: %s, Material: %s", name, size, material);
     }
 
-
     public double getTotalPrice(){
         return this.price;
     }
-    
 }
