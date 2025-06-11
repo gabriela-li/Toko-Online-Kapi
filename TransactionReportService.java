@@ -30,8 +30,8 @@ public class TransactionReportService {
         System.out.println("\n=== LAPORAN TRANSAKSI ===");
         System.out.println("1. Lihat Semua Transaksi");
         System.out.println("2. Lihat Detail Transaksi");
-        System.out.println("3. Filter by Status");
-        System.out.println("4. Total Revenue");
+        System.out.println("3. Filter berdasarkan Status");
+        System.out.println("4. Total Keuntungan");
         System.out.print("Pilih: ");
     }
 }
