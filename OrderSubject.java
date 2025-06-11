@@ -3,6 +3,7 @@ import java.util.List;
 
 public class OrderSubject {
     private List<OrderObserver> observers = new ArrayList<>();
+    
 
     // Register observer
     public void registerObserver(OrderObserver observer) {

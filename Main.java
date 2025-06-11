@@ -17,6 +17,8 @@ public class Main {
 
         boolean exitApp = false;
 
+        UserDatabase userDB = UserDatabase.getInstance(); 
+
         while (!exitApp) {
             System.out.println("1. Login");
             System.out.println("2. Register");
@@ -31,7 +33,7 @@ public class Main {
                     String username = sc.nextLine();
                     System.out.print("Password: ");
                     String password = sc.nextLine();
-                    User user = UserDatabase.loginUser(username, password);
+                    User user = userDB.loginUser(username, password);
 
                     if (user == null) {
                         System.out.println("Login gagal! Username atau password salah.\n");
@@ -54,7 +56,7 @@ public class Main {
                     System.out.print("Tipe user (Customer/Admin): ");
                     String userType = sc.nextLine();
 
-                    boolean success = UserDatabase.registerUser(username, password, fullName, userType);
+                    boolean success = userDB.registerUser(username, password, fullName, userType);
                     if (success) {
                         System.out.println("Registrasi berhasil!\n");
                     } else {

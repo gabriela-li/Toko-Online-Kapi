@@ -2,7 +2,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class OrderDisplayService {
-    private Scanner scanner;
+    private Scanner scanner; 
 
     public OrderDisplayService(Scanner scanner) {
         this.scanner = scanner;

@@ -3,9 +3,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class OrderDatabase {
+    private static OrderDatabase instance;
     private static final List<Order> orders = new ArrayList<>();
 
-    public static void addOrder(Order order) {
+    private OrderDatabase() {
+    }
+
+    public static OrderDatabase getInstance() {
+        if (instance == null) {
+            instance = new OrderDatabase();
+        }
+        return instance;
+    }
+
+    public void addOrder(Order order) {
         orders.add(order);
     }
 

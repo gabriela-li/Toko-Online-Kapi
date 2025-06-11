@@ -5,6 +5,7 @@ public class Checkout {
     private OrderSubject orderSubject;
     private Config config;
     private Order lastOrder; //menyimpan order terakhir
+    private OrderDatabase orderDB = OrderDatabase.getInstance(); 
 
     //constructor
     public Checkout(PaymentContext paymentContext, OrderSubject orderSubject, Config config) {
@@ -44,7 +45,7 @@ public class Checkout {
                 .build();
 
         // simpan order ke database
-        OrderDatabase.addOrder(order);
+        orderDB.addOrder(order);
 
         this.lastOrder = order;
 
