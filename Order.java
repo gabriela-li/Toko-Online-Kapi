@@ -85,8 +85,8 @@ public class Order {
                 "Order Summary:\n" +
                         "Order ID: %s\n" +
                         "Subtotal: Rp%,.2f\n" +
-                        "Gift Wrap: %s (+Rp10,000)\n" +
-                        "Express Shipping: %s (+Rp15,000)\n" +
+                        "Gift Wrap: %s\n" +
+                        "Express Shipping: %s\n" +
                         "Tax (%.0f%%): Rp%,.2f\n" +
                         "Total: Rp%,.2f\n" +
                         "Alamat Pengiriman: %s",
