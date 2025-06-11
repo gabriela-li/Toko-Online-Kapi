@@ -43,7 +43,7 @@ public class TransactionManager {
         );
 
         transactions.add(transaction);
-        System.out.println("Transaksi berhasil disimpan dengan ID: " + transactionId);
+        System.out.println("\nTransaksi berhasil disimpan dengan ID: " + transactionId);
     }
 
     // Method untuk update status transaksi
