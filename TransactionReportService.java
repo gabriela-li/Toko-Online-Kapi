@@ -23,7 +23,7 @@ public class TransactionReportService {
 
     public void displayFormattedRevenue() {
         double revenue = getTotalRevenue();
-        System.out.printf("Total Revenue: Rp%.0f\n", revenue);
+        System.out.printf("Total Keuntungan: Rp%.0f\n", revenue);
     }
 
     public void displayReportMenu() {
